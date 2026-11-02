@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.qubesos.dashboard
+SystemdService=qubes-dashboard.service

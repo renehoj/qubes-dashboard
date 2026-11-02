@@ -1,0 +1,181 @@
+/* qubes-logs window chrome.
+
+   qubes-information's information.css (qubes-dashboard's look), loaded the same
+   way: AFTER the stock menu's qubes-menu-light.css / qubes-menu-dark.css (or,
+   off dom0, after fallback-theme.css, which defines the same colour names), so
+   @outer-background, @left-background, @separator, @buttons-bg, @text-color
+   and @text-color-contrast resolve. Opened from qubes-dashboard, the list has
+   already loaded those, and only this file is added.
+
+   @ALPHA@ is substituted by window.py. Every translucent declaration is
+   preceded by its opaque twin, so a GTK that cannot evaluate alpha() still
+   draws the opaque stock look.
+*/
+
+/* The old menu's highlight red; see qubes-launcher's launcher.css for why. */
+@define-color launcher-red #BF616A;
+
+#qubes-logs-window {
+    background-color: @outer-background;
+    background-color: alpha(@outer-background, @ALPHA@);
+    border: 1px solid @separator;
+    border-radius: 6px;
+}
+
+#qubes-logs-window .logs-pane {
+    background-color: @left-background;
+    background-color: alpha(@left-background, @ALPHA@);
+    border-radius: 5px;
+}
+
+/* Title and subtitle: the action dialog's. */
+#qubes-logs-window .dialog-title {
+    margin: 12px 16px 0 16px;
+    color: @text-color;
+}
+
+#qubes-logs-window .dialog-subtitle {
+    margin: 2px 16px 8px 16px;
+    color: @buttons-bg;
+}
+
+/* The filter field: the list's search field. */
+#qubes-logs-window entry.filter {
+    padding: 4px 9px;
+    border: 1px solid @separator;
+    border-radius: 7px;
+    background-image: none;
+    background-color: @outer-background;
+    color: @text-color-contrast;
+    box-shadow: none;
+    min-height: 0;
+}
+
+#qubes-logs-window entry.filter:focus {
+    border-color: @launcher-red;
+}
+
+/* The stock stylesheet paints focused images blue (an unscoped `image:focus`
+   rule); clear it for the filter field's icons, as the list does. */
+#qubes-logs-window entry image,
+#qubes-logs-window entry image:hover,
+#qubes-logs-window entry image:focus {
+    background-image: none;
+    background-color: transparent;
+    color: @text-color-contrast;
+}
+
+#qubes-logs-window scrolledwindow,
+#qubes-logs-window viewport {
+    background-color: transparent;
+    color: @text-color;
+}
+
+#qubes-logs-window .page-scroller {
+    border: 1px solid @separator;
+    border-radius: 5px;
+}
+
+/* The log itself: monospace, on the list's darker background. Error and
+   warning lines are coloured by window.py (text tags, not CSS). */
+#qubes-logs-window textview.log,
+#qubes-logs-window textview.log text {
+    background-color: transparent;
+    color: @text-color-contrast;
+}
+
+#qubes-logs-window textview.log text selection {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.45);
+    color: @text-color-contrast;
+}
+
+/* Tabs: the action dialog's buttons, the current one underlined in red. */
+#qubes-logs-window button.tab {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0 2px 0 0;
+    padding: 4px 12px;
+}
+
+#qubes-logs-window button.tab label {
+    color: @buttons-bg;
+}
+
+#qubes-logs-window button.tab:hover {
+    background-color: alpha(@launcher-red, 0.15);
+}
+
+#qubes-logs-window button.tab.active {
+    border-bottom-color: @launcher-red;
+}
+
+#qubes-logs-window button.tab.active label {
+    color: @text-color;
+    font-weight: bold;
+}
+
+#qubes-logs-window button.tab.missing label {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+#qubes-logs-window label.placeholder {
+    color: @buttons-bg;
+    font-style: italic;
+}
+
+#qubes-logs-window label selection {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.45);
+    color: @text-color-contrast;
+}
+
+/* Footer: hint or error on the left, Copy / Reload / Close on the right. */
+#qubes-logs-window .footer {
+    color: @buttons-bg;
+    font-size: smaller;
+    margin: 0 10px;
+}
+
+#qubes-logs-window .footer.error {
+    color: @launcher-red;
+}
+
+/* Buttons: the action dialog's. Hover gets a faint selection colour. */
+#qubes-logs-window button.action {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    margin: 0 0 0 4px;
+    padding: 6px 14px;
+    color: @text-color;
+}
+
+#qubes-logs-window button.action label {
+    color: @text-color;
+}
+
+#qubes-logs-window button.action:hover {
+    background-color: alpha(@launcher-red, 0.15);
+}
+
+#qubes-logs-window button.action:focus {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.35);
+}
+
+#qubes-logs-window button.action.suggested label {
+    font-weight: bold;
+}
+
+#qubes-logs-window button.action:disabled label {
+    color: @buttons-bg;
+    opacity: 0.6;
+}

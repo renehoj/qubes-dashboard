@@ -1,0 +1,249 @@
+/* qubes-backup window chrome.
+
+   qubes-logs' logs.css (qubes-dashboard's look), loaded the same
+   way: AFTER the stock menu's qubes-menu-light.css / qubes-menu-dark.css (or,
+   off dom0, after fallback-theme.css, which defines the same colour names), so
+   @outer-background, @left-background, @separator, @buttons-bg, @text-color
+   and @text-color-contrast resolve. Opened from qubes-dashboard, the list has
+   already loaded those, and only this file is added.
+
+   @ALPHA@ is substituted by window.py. Every translucent declaration is
+   preceded by its opaque twin, so a GTK that cannot evaluate alpha() still
+   draws the opaque stock look.
+*/
+
+/* The old menu's highlight red; see qubes-launcher's launcher.css for why. */
+@define-color launcher-red #BF616A;
+
+#qubes-backup-window {
+    background-color: @outer-background;
+    background-color: alpha(@outer-background, @ALPHA@);
+    border: 1px solid @separator;
+    border-radius: 6px;
+}
+
+#qubes-backup-window .backup-pane {
+    background-color: @left-background;
+    background-color: alpha(@left-background, @ALPHA@);
+    border-radius: 5px;
+}
+
+/* Title and subtitle: the action dialog's. */
+#qubes-backup-window .dialog-title {
+    margin: 12px 16px 0 16px;
+    color: @text-color;
+}
+
+#qubes-backup-window .dialog-subtitle {
+    margin: 2px 16px 8px 16px;
+    color: @buttons-bg;
+}
+
+/* Fields: the list's search field. */
+#qubes-backup-window entry.field {
+    padding: 4px 9px;
+    border: 1px solid @separator;
+    border-radius: 7px;
+    background-image: none;
+    background-color: @outer-background;
+    color: @text-color-contrast;
+    box-shadow: none;
+    min-height: 0;
+}
+
+#qubes-backup-window entry.field:focus {
+    border-color: @launcher-red;
+}
+
+/* The stock stylesheet paints focused images blue (an unscoped `image:focus`
+   rule); clear it for the fields' icons, as the list does. */
+#qubes-backup-window entry image,
+#qubes-backup-window entry image:hover,
+#qubes-backup-window entry image:focus {
+    background-image: none;
+    background-color: transparent;
+    color: @text-color-contrast;
+}
+
+#qubes-backup-window scrolledwindow,
+#qubes-backup-window viewport {
+    background-color: transparent;
+    color: @text-color;
+}
+
+#qubes-backup-window .page-scroller {
+    border: 1px solid @separator;
+    border-radius: 5px;
+}
+
+/* The tool's output: monospace, on the list's darker background. */
+#qubes-backup-window textview.log,
+#qubes-backup-window textview.log text {
+    background-color: transparent;
+    color: @text-color-contrast;
+}
+
+#qubes-backup-window textview.log text selection {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.45);
+    color: @text-color-contrast;
+}
+
+/* Tabs: the action dialog's buttons, the current one underlined in red. */
+#qubes-backup-window button.tab {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0 2px 0 0;
+    padding: 4px 12px;
+}
+
+#qubes-backup-window button.tab label {
+    color: @buttons-bg;
+}
+
+#qubes-backup-window button.tab:hover {
+    background-color: alpha(@launcher-red, 0.15);
+}
+
+#qubes-backup-window button.tab.active {
+    border-bottom-color: @launcher-red;
+}
+
+#qubes-backup-window button.tab.active label {
+    color: @text-color;
+    font-weight: bold;
+}
+
+#qubes-backup-window button.tab:disabled label {
+    opacity: 0.6;
+}
+
+/* The form: labels right-aligned and dim, as the list's column headers. */
+#qubes-backup-window label.field-label {
+    color: @buttons-bg;
+}
+
+#qubes-backup-window label.value,
+#qubes-backup-window checkbutton label {
+    color: @text-color;
+}
+
+#qubes-backup-window label.note {
+    color: @buttons-bg;
+    font-style: italic;
+}
+
+#qubes-backup-window .form:disabled label.field-label,
+#qubes-backup-window .form:disabled entry.field {
+    opacity: 0.6;
+}
+
+/* The drop-downs' buttons: as flat as the fields beside them. */
+#qubes-backup-window combobox button {
+    background-image: none;
+    background-color: @outer-background;
+    border: 1px solid @separator;
+    border-radius: 7px;
+    box-shadow: none;
+    color: @text-color-contrast;
+    padding: 2px 8px;
+    min-height: 0;
+}
+
+#qubes-backup-window combobox entry.field {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#qubes-backup-window combobox entry.field + button {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#qubes-backup-window combobox button:focus {
+    border-color: @launcher-red;
+}
+
+/* Progress: the launcher's red on the list's background. */
+#qubes-backup-window progressbar trough {
+    background-image: none;
+    background-color: @outer-background;
+    border: 1px solid @separator;
+    border-radius: 4px;
+    min-height: 8px;
+}
+
+#qubes-backup-window progressbar progress {
+    background-image: none;
+    background-color: @launcher-red;
+    border: none;
+    border-radius: 3px;
+    min-height: 8px;
+}
+
+#qubes-backup-window progressbar text {
+    color: @buttons-bg;
+    font-size: smaller;
+}
+
+/* The question before a revert, where the buttons were. */
+#qubes-backup-window label.confirm {
+    color: @text-color;
+    margin: 0 8px;
+}
+
+#qubes-backup-window label selection {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.45);
+    color: @text-color-contrast;
+}
+
+/* Footer: hint or error on the left, the buttons on the right. */
+#qubes-backup-window .footer {
+    color: @buttons-bg;
+    font-size: smaller;
+    margin: 0 10px;
+}
+
+#qubes-backup-window .footer.failed {
+    color: @launcher-red;
+}
+
+/* Buttons: the action dialog's. Hover gets a faint selection colour. */
+#qubes-backup-window button.action {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    margin: 0 0 0 4px;
+    padding: 6px 14px;
+    color: @text-color;
+}
+
+#qubes-backup-window button.action label {
+    color: @text-color;
+}
+
+#qubes-backup-window button.action:hover {
+    background-color: alpha(@launcher-red, 0.15);
+}
+
+#qubes-backup-window button.action:focus {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.35);
+}
+
+#qubes-backup-window button.action.suggested label {
+    font-weight: bold;
+}
+
+#qubes-backup-window button.action:disabled label {
+    color: @buttons-bg;
+    opacity: 0.6;
+}

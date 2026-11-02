@@ -1,0 +1,259 @@
+/* qubes-devices window chrome.
+
+   qubes-settings' settings.css (qubes-dashboard's look), loaded
+   the same way: AFTER the stock menu's qubes-menu-light.css /
+   qubes-menu-dark.css (or, off dom0, after fallback-theme.css, which defines the
+   same colour names), so @outer-background, @left-background, @separator,
+   @buttons-bg, @text-color and @text-color-contrast resolve. Opened from
+   qubes-dashboard, the list has already loaded those, and only this file is
+   added.
+
+   @ALPHA@ is substituted by window.py. Every translucent declaration is
+   preceded by its opaque twin, so a GTK that cannot evaluate alpha() still
+   draws the opaque stock look.
+*/
+
+/* The old menu's highlight red; see qubes-launcher's launcher.css for why. */
+@define-color launcher-red #BF616A;
+
+#qubes-devices-window {
+    background-color: @outer-background;
+    background-color: alpha(@outer-background, @ALPHA@);
+    border: 1px solid @separator;
+    border-radius: 6px;
+}
+
+#qubes-devices-window .devices-pane {
+    background-color: @left-background;
+    background-color: alpha(@left-background, @ALPHA@);
+    border-radius: 5px;
+}
+
+/* Title and subtitle: the action dialog's. */
+#qubes-devices-window .dialog-title {
+    margin: 12px 16px 0 16px;
+    color: @text-color;
+}
+
+#qubes-devices-window .dialog-subtitle {
+    margin: 2px 16px 6px 16px;
+    color: @buttons-bg;
+}
+
+/* Section headers: the list's column header, a quiet label row. */
+#qubes-devices-window .section {
+    color: @buttons-bg;
+    border-bottom: 1px solid @separator;
+    padding: 2px 0;
+    margin: 8px 0 4px 0;
+}
+
+#qubes-devices-window .field-title {
+    color: @text-color;
+}
+
+#qubes-devices-window .unit,
+#qubes-devices-window .note,
+#qubes-devices-window .placeholder {
+    color: @buttons-bg;
+}
+
+#qubes-devices-window .note {
+    font-size: smaller;
+    margin-top: 6px;
+}
+
+/* Inputs: the search field's frame, red when focused. */
+#qubes-devices-window combobox button,
+#qubes-devices-window spinbutton {
+    background-image: none;
+    background-color: @outer-background;
+    color: @text-color-contrast;
+    border: 1px solid @separator;
+    border-radius: 7px;
+    box-shadow: none;
+    min-height: 0;
+    padding: 3px 9px;
+}
+
+#qubes-devices-window spinbutton {
+    padding: 0;
+}
+
+#qubes-devices-window spinbutton entry {
+    background: transparent;
+    color: @text-color-contrast;
+    border: none;
+    box-shadow: none;
+    padding: 3px 9px;
+}
+
+#qubes-devices-window spinbutton button {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    color: @buttons-bg;
+}
+
+#qubes-devices-window combobox button:focus,
+#qubes-devices-window spinbutton:focus,
+#qubes-devices-window spinbutton:focus-within {
+    border-color: @launcher-red;
+}
+
+#qubes-devices-window combobox button label,
+#qubes-devices-window combobox cellview {
+    color: @text-color-contrast;
+}
+
+#qubes-devices-window checkbutton label {
+    color: @text-color;
+}
+
+#qubes-devices-window checkbutton:focus label {
+    color: @text-color-contrast;
+}
+
+/* The stock stylesheet paints focused images blue (an unscoped `image:focus`
+   rule); clear it inside the inputs, as the list does for its search field. */
+#qubes-devices-window combobox image,
+#qubes-devices-window spinbutton image,
+#qubes-devices-window image:focus {
+    background-image: none;
+    background-color: transparent;
+}
+
+#qubes-devices-window *:disabled label,
+#qubes-devices-window .field-title:disabled,
+#qubes-devices-window combobox:disabled cellview,
+#qubes-devices-window spinbutton:disabled,
+#qubes-devices-window spinbutton:disabled entry,
+#qubes-devices-window spinbutton:disabled button {
+    color: @buttons-bg;
+    opacity: 0.6;
+}
+
+/* Footer: hint or error on the left, Cancel / Save on the right. */
+#qubes-devices-window .footer {
+    color: @buttons-bg;
+    font-size: smaller;
+    margin: 0 10px;
+}
+
+#qubes-devices-window .footer.error {
+    color: @launcher-red;
+}
+
+/* Buttons: the action dialog's. Focus is the keyboard's choice and gets the
+   selection colour; hover is fainter. */
+#qubes-devices-window button.action {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    margin: 0 0 0 4px;
+    padding: 6px 14px;
+    color: @text-color;
+}
+
+#qubes-devices-window button.action label {
+    color: @text-color;
+}
+
+#qubes-devices-window button.action:hover {
+    background-color: alpha(@launcher-red, 0.15);
+}
+
+#qubes-devices-window button.action:focus {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.35);
+}
+
+#qubes-devices-window button.action.suggested label {
+    font-weight: bold;
+}
+
+#qubes-devices-window button.action:disabled label {
+    color: @buttons-bg;
+    opacity: 0.6;
+}
+
+/* Text entries: the inputs' frame. */
+#qubes-devices-window entry {
+    background-image: none;
+    background-color: @outer-background;
+    color: @text-color-contrast;
+    border: 1px solid @separator;
+    border-radius: 7px;
+    box-shadow: none;
+    min-height: 0;
+    padding: 3px 9px;
+}
+
+#qubes-devices-window entry:focus {
+    border-color: @launcher-red;
+}
+
+#qubes-devices-window entry:disabled {
+    color: @buttons-bg;
+    opacity: 0.6;
+}
+
+/* The device list: the list's grid, with its red selection. */
+#qubes-devices-window scrolledwindow.devices-scroller {
+    border: 1px solid @separator;
+    border-radius: 5px;
+}
+
+#qubes-devices-window treeview.devices {
+    background-color: transparent;
+    color: @text-color;
+}
+
+#qubes-devices-window treeview.devices header button {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid @separator;
+    box-shadow: none;
+    color: @buttons-bg;
+    padding: 2px 6px;
+}
+
+#qubes-devices-window treeview.devices header button label {
+    color: @buttons-bg;
+}
+
+#qubes-devices-window treeview.devices:selected {
+    background-color: @launcher-red;
+    background-color: alpha(@launcher-red, 0.35);
+    color: @text-color-contrast;
+}
+
+#qubes-devices-window .implicit {
+    color: @buttons-bg;
+    font-style: italic;
+    margin: 4px 6px 0 6px;
+}
+
+#qubes-devices-window .note {
+    margin-bottom: 6px;
+}
+
+/* Tool buttons under the list: the action buttons, a little tighter. */
+#qubes-devices-window button.action.tool {
+    margin: 0 4px 0 0;
+    padding: 4px 10px;
+}
+
+/* What the warnings page wants you to read. */
+#qubes-devices-window .errors,
+#qubes-devices-window .warning {
+    color: @launcher-red;
+}
+
+#qubes-devices-window .errors {
+    margin-top: 8px;
+}

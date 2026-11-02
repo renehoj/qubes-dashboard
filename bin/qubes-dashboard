@@ -1,0 +1,27 @@
+#!/bin/sh
+# Run qubes-dashboard straight from a source checkout, without installing it.
+#
+# The frontend uses package-relative imports, so it has to be run as a module
+# with the checkout on sys.path (same reason as qubes-launcher's bin/ wrapper).
+# After a real install, use the `qubes-dashboard` entry point instead.
+#
+# qubes-settings, qubes-firewall, qubes-devices, qubes-information,
+# qubes-logs and qubes-backup under tools/ go on sys.path too, so Settings,
+# Firewall, Devices, Information, Logs and Backup open their windows
+# in-process (see their READMEs).
+
+set -eu
+
+here=$(cd "$(dirname "$0")/.." && pwd)
+PYTHONPATH="$here${PYTHONPATH:+:$PYTHONPATH}"
+for sibling in qubes-settings:qubes_settings qubes-firewall:qubes_firewall \
+               qubes-devices:qubes_devices qubes-information:qubes_information \
+               qubes-logs:qubes_logs qubes-backup:qubes_backup; do
+    repo=${sibling%%:*}
+    if [ -d "$here/tools/$repo/${sibling#*:}" ]; then
+        PYTHONPATH="$PYTHONPATH:$here/tools/$repo"
+    fi
+done
+export PYTHONPATH
+
+exec python3 -m qubes_dashboard.frontend "$@"

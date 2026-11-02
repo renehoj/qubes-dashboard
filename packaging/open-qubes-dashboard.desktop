@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=gdbus call --session --dest org.qubesos.dashboard --object-path "/org/qubesos/dashboard" --method org.freedesktop.Application.Activate "{}"
+Icon=qubes-manager
+Terminal=false
+Name=Open Qubes Dashboard
+GenericName=Open Qubes Dashboard
+StartupNotify=false
+OnlyShowIn=X-Invalid;
