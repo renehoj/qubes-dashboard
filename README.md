@@ -28,6 +28,10 @@ Enter on a qube never acts by itself. It opens a small dialog with **Start**,
 | **s** / **t** / **r** / **a** / **e** / **f** / **d** / **i** / **l** / **b** / **c** | Start / Stop / Restart / Applications / Settings / Firewall / Devices / Information / Logs / Backup / Console (underlined letter) |
 | Escape | back to the list |
 
+<img width="643" height="482" alt="qdb-main" src="https://github.com/user-attachments/assets/9d888070-6b26-4039-ac3b-b9a1ae52dfac" />
+
+<img width="652" height="483" alt="qdb-options" src="https://github.com/user-attachments/assets/09396302-7c5d-4c30-a6ae-596ad767b1d4" />
+
 Buttons that make no sense in the qube's current state are greyed out. A paused
 qube offers **Resume** instead of Start, and dom0 offers only Settings,
 Information and Logs (it has no firewall and no devices to assign, and its
@@ -57,6 +61,8 @@ in the list's own process, so the resident instance opens it at once. With
 `--keep-visible` the list stays instead, the window opens over it, and when the
 window closes you are back in the list with the same qube selected.
 
+<img width="494" height="688" alt="qdb-settings" src="https://github.com/user-attachments/assets/1917e295-0905-4d7c-8ed2-e0e7c08c2028" />
+
 **Settings** opens [qubes-settings](tools/qubes-settings). It has
 qubes-manager's settings (label, template, networking, default disposable,
 backups, memory, VCPUs, virtualization) and Create Qube's application menu
@@ -66,9 +72,13 @@ it, Ctrl+Enter saves.
 When `qubes_settings` cannot be imported, Settings runs the `qubes-settings`
 command if it is on `PATH`, else `qubes-vm-settings`.
 
+<img width="744" height="463" alt="qdb-firewall" src="https://github.com/user-attachments/assets/9832e63f-a4cc-4d07-b021-7604b37f19a5" />
+
 **Firewall** opens [qubes-firewall](tools/qubes-firewall): the qube's rules in evaluation order, with Add / Edit / Delete / Move, and
 Save after a check for lockouts. Escape closes it, Ctrl+Enter saves. When
 `qubes_firewall` cannot be imported, Firewall runs the `qubes-firewall` command.
+
+<img width="1025" height="586" alt="qdb-devices" src="https://github.com/user-attachments/assets/8e6f5327-746a-47d1-b7b8-476ba5a359b0" />
 
 **Devices** opens [qubes-devices](tools/qubes-devices): every PCI device, with a check box for those assigned to the qube (as qube
 Settings' Devices tab), strict reset per device, and which other qubes have
@@ -79,12 +89,16 @@ device another qube has, and a GPU without its audio function. Escape closes,
 Ctrl+Enter saves. When `qubes_devices` cannot be imported, Devices runs the
 `qubes-devices` command.
 
+<img width="799" height="670" alt="qdb-info" src="https://github.com/user-attachments/assets/5275e8c7-33f9-4b47-8c06-7fa9fc03ee85" />
+
 **Information** opens [qubes-information](tools/qubes-information): everything about the qube on one page -- an overview, live
 memory and uptime while it runs, every property (`qvm-prefs`), feature
 (`qvm-features`), service (`qvm-service`), tag (`qvm-tags`) and volume
 (`qvm-volume`), and its firewall rules. It only reads. Typing filters the page,
 Escape clears the filter and then closes. When `qubes_information` cannot be
 imported, Information runs the `qubes-information` command.
+
+<img width="947" height="709" alt="qdb-logs" src="https://github.com/user-attachments/assets/458df489-a4bc-4141-b6ec-415f48431611" />
 
 **Logs** opens [qubes-logs](tools/qubes-logs): the
 qube's console log (`/var/log/xen/console/guest-<qube>.log`), GUI daemon log
@@ -94,6 +108,8 @@ lines in red and warnings in amber. dom0 gets the hypervisor log. Typing
 filters the lines, Ctrl+R reads the files again, and Alt+G copies what is shown
 to the global clipboard. Escape clears the filter and then closes. When
 `qubes_logs` cannot be imported, Logs runs the `qubes-logs` command.
+
+<img width="680" height="393" alt="qdb-backup" src="https://github.com/user-attachments/assets/53adee44-24a7-4075-ab32-2c2db69754ef" />
 
 **Backup** opens [qubes-backup](tools/qubes-backup): three tabs (Ctrl+1/2/3).
 *Backup* runs `qvm-backup` for the qube alone, to a directory in dom0 or in
@@ -108,6 +124,8 @@ closed meanwhile; hiding the list leaves a running backup's window open on its
 own. After a restore the list reloads. Ctrl+Enter runs the tab's action,
 Escape closes. When `qubes_backup` cannot be imported, Backup runs the
 `qubes-backup` command.
+
+<img width="642" height="481" alt="qdb-apps" src="https://github.com/user-attachments/assets/4fdc22f1-338f-4675-83f3-2af6864cb2a3" />
 
 **Applications** lists the qube's applications: the ones chosen in its
 Settings' Applications tab (the `menu-items` feature), with the names and icons
