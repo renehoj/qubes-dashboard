@@ -260,25 +260,6 @@ gdbus call --session --dest org.qubesos.dashboard --object-path /org/qubesos/das
 
 ### Getting the files into dom0
 
-`packaging/install-on-dom0.sh` does all of the above in one go. A staging qube
-(default `personal`, or the first argument) clones qubes-dashboard fresh
-from the git server and streams it back as a tarball. dom0 checks the archive,
-installs the tree as `~/.local/share/qubes-dashboard` (the windows under
-`tools/` come with it), removes the separate `~/.local/share/qubes-settings`
-and so on that earlier versions installed, installs
-the unit with the drop-in, the D-Bus service and the autostart entry, and
-restarts the resident instance. Run it again to update. Get the script itself
-into dom0 once:
-
-```console
-[user@dom0] $ qvm-run -p <qube> 'cat ~/src/qubes-dashboard/packaging/install-on-dom0.sh' \
-                  > install-on-dom0.sh
-[user@dom0] $ bash install-on-dom0.sh <qube>
-```
-
-It deploys what is pushed to `main`, not your local checkout. To copy a
-checkout by hand instead (dom0 has no network):
-
 ```console
 [user@dom0] $ qvm-run -p <qube> "tar -C ~/src -cf - qubes-dashboard --exclude=.git" \
                   | tar -C ~/.local/share -xf -
