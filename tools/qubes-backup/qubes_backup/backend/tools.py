@@ -10,13 +10,15 @@ import codecs
 import os
 import signal
 import subprocess
+import threading
 
 from ..model import OutputParser
 from .base import BackendError, Cancelled, Job, Report
 
 #: How many of the last log lines an error message quotes.
 ERROR_LINES = 3
-#: The most a qube's listing of a directory may be; it is untrusted.
+#: The most a qube's listing of a directory (or its error output) may be;
+#: it is untrusted.
 MAX_LISTING = 1024 * 1024
 LISTING_TIMEOUT = 60
 
@@ -82,17 +84,49 @@ def run_tool(argv: list[str], stdin: bytes, job: Job, report: Report) -> None:
 
 
 def run_quiet(argv: list[str], timeout: float = LISTING_TIMEOUT) -> str:
-    """Run ``argv`` and return its output (at most MAX_LISTING bytes);
-    BackendError with its error output when it fails."""
+    """Run ``argv`` and return its output; BackendError with its error output
+    when it fails. Neither stream is kept past MAX_LISTING bytes: a qube that
+    sends more is cut off, not buffered in dom0."""
     try:
-        result = subprocess.run(argv, stdin=subprocess.DEVNULL, capture_output=True,
-                                timeout=timeout, check=False)
+        process = subprocess.Popen(  # pylint: disable=consider-using-with
+            argv, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
     except OSError as exc:
         raise BackendError(f"Cannot run {argv[0]}: {exc.strerror or exc}") from exc
+    overflow = threading.Event()
+
+    def collect(stream, chunks: list[bytes]) -> None:
+        size = 0
+        while chunk := stream.read1(65536):
+            size += len(chunk)
+            if size > MAX_LISTING:
+                overflow.set()
+                process.kill()
+                return
+            chunks.append(chunk)
+
+    out: list[bytes] = []
+    err: list[bytes] = []
+    readers = [threading.Thread(target=collect, args=(process.stdout, out), daemon=True),
+               threading.Thread(target=collect, args=(process.stderr, err), daemon=True)]
+    for reader in readers:
+        reader.start()
+    try:
+        code = process.wait(timeout)
     except subprocess.TimeoutExpired as exc:
         raise BackendError(f"{argv[0]} did not answer in {timeout:.0f} seconds") from exc
-    if result.returncode != 0:
-        error = result.stderr.decode("utf-8", errors="replace").strip()
-        last = error.splitlines()[-1] if error else f"exit status {result.returncode}"
+    finally:
+        if process.poll() is None:
+            process.kill()
+            process.wait()
+        for reader in readers:
+            reader.join(1)
+        process.stdout.close()
+        process.stderr.close()
+    if overflow.is_set():
+        raise BackendError(f"{argv[0]} sent more than {MAX_LISTING // 1024} KiB")
+    if code != 0:
+        error = b"".join(err).decode("utf-8", errors="replace").strip()
+        last = error.splitlines()[-1] if error else f"exit status {code}"
         raise BackendError(last)
-    return result.stdout[:MAX_LISTING].decode("utf-8", errors="replace")
+    return b"".join(out).decode("utf-8", errors="replace")

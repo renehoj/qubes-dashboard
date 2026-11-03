@@ -21,6 +21,11 @@ class LogFilesTest(unittest.TestCase):
         self.assertEqual([f.path for f in model.log_files("dom0")],
                          ["/var/log/xen/console/hypervisor.log"])
 
+    def test_not_a_qube_name(self):
+        for name in ("../../etc/shadow", "work/../x", "", "-work", "a" * 32):
+            with self.assertRaises(ValueError, msg=name):
+                model.log_files(name)
+
 
 class CleanTest(unittest.TestCase):
     def test_colours_go(self):
@@ -33,6 +38,8 @@ class CleanTest(unittest.TestCase):
 
     def test_controls_go_tabs_stay(self):
         self.assertEqual(model.clean("a\x07b\tc\x00"), "ab\tc\n")
+        # C1 controls (\x9b is a one-byte CSI) and bidi overrides go too.
+        self.assertEqual(model.clean("a\x9b31mb\u202ec\u2066d\n"), "a31mbcd\n")
 
     def test_blank_lines_go(self):
         text = ("[2026-10-24 11:38:42] Fedora Linux 41\n"

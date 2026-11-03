@@ -146,6 +146,19 @@ class RunToolTest(unittest.TestCase):
         with self.assertRaisesRegex(BackendError, "^boom$"):
             tools.run_quiet([stand_in("import sys\nsys.exit('boom')")])
 
+    def test_run_quiet_cuts_off_endless_output(self):
+        # A qube that never stops talking is killed, not buffered in dom0.
+        endless = "import sys\nwhile True:\n    sys.{}.write('x' * 65536)"
+        for stream in ("stdout", "stderr"):
+            started = time.monotonic()
+            with self.assertRaisesRegex(BackendError, "more than"):
+                tools.run_quiet([stand_in(endless.format(stream))])
+            self.assertLess(time.monotonic() - started, 5)
+
+    def test_run_quiet_timeout(self):
+        with self.assertRaisesRegex(BackendError, "did not answer"):
+            tools.run_quiet([stand_in("import time\ntime.sleep(30)")], timeout=0.5)
+
 
 class QubesAdminBackendTest(unittest.TestCase):
     """The commands it runs, with qubesadmin and the tools faked."""

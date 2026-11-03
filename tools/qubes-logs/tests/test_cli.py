@@ -39,6 +39,11 @@ class CliTest(unittest.TestCase):
     def test_unknown_log(self):
         self.assertEqual(run("dom0", "--log", "gui"), (2, ""))
 
+    def test_not_a_qube_name(self):
+        with self.assertRaises(SystemExit) as raised:
+            run("../../../etc/shadow")
+        self.assertEqual(raised.exception.code, 2)
+
     def test_missing_file(self):
         self.assertEqual(run("nope"), (1, ""))
 

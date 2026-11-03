@@ -150,6 +150,10 @@ class OutputTest(unittest.TestCase):
         parser = model.OutputParser()
         self.assertEqual(parser.feed("\x1b[0;31mbad\x1b[0m\n"), [model.Output(line="bad")])
 
+    def test_c1_and_bidi_stripped(self):
+        parser = model.OutputParser()
+        self.assertEqual(parser.feed("b\x9b31ma‮d\n"), [model.Output(line="b31mad")])
+
 
 class BackupFilesTest(unittest.TestCase):
     def test_only_backups_newest_first(self):

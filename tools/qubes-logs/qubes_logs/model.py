@@ -29,8 +29,24 @@ class LogFile:
     path: str
 
 
+def is_qube_name(name: str) -> bool:
+    """Could ``name`` be a qube? (qubesd's rule: a letter, then at most 30
+    letters, digits, ``_``, ``.`` or ``-``.) Anything else could walk out of
+    the log directories."""
+    return re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,30}", name) is not None
+
+
+def qube_name(name: str) -> str:
+    """``name``, for argparse's ``type=``: rejected unless it could be a qube."""
+    if not is_qube_name(name):
+        raise ValueError(name)
+    return name
+
+
 def log_files(name: str) -> tuple[LogFile, ...]:
-    """The logs for qube ``name``, in tab order."""
+    """The logs for qube ``name``, in tab order. ValueError when ``name``
+    cannot be a qube."""
+    qube_name(name)
     if name == ADMIN_NAME:
         # dom0 has no console, GUI daemon or qrexec log of its own.
         return (LogFile("Hypervisor", "/var/log/xen/console/hypervisor.log"),)
@@ -68,7 +84,10 @@ class LogText:
 # Console logs are what the qube wrote to its serial console: systemd's
 # colours, cursor movement and carriage returns come along.
 _ESCAPES = re.compile(r"\x1b(?:\[[0-9;?]*[ -/]*[@-~]|\][^\x07\x1b]*(?:\x07|\x1b\\)|[@-Z\\-_])")
-_CONTROLS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
+#: C0 and C1 controls (not tab or newline), and the invisible marks that
+#: reorder text (bidi overrides), which a qube could use to make a line read
+#: as something else.
+_CONTROLS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]")
 #: xenconsoled stamps every console line, empty ones too.
 _TIMESTAMP = re.compile(r"\[\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\]")
 

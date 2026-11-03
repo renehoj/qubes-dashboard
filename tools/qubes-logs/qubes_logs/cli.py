@@ -20,7 +20,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         prog="qubes-logs-cli",
         description="Print a qube's log, as the window shows it.",
     )
-    parser.add_argument("qube")
+    parser.add_argument("qube", type=model.qube_name)
     parser.add_argument("filter", nargs="*", help="words to filter lines by, as in the window")
     parser.add_argument("--log", default=None,
                         help="which log, by tab title: console (default), gui or qrexec; "

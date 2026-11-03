@@ -17,6 +17,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gtk, Gdk  # noqa: E402,F401  pylint: disable=unused-import
 
+from . import model  # noqa: E402
 from .backend import KINDS, create_backend  # noqa: E402
 from .window import WINDOW_ALPHA, LogsWindow  # noqa: E402
 
@@ -26,7 +27,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         prog="qubes-logs",
         description="Show a qube's logs: its console, GUI daemon and qrexec.",
     )
-    parser.add_argument("qube")
+    parser.add_argument("qube", type=model.qube_name)
     parser.add_argument("--backend", choices=KINDS, default="auto",
                         help="where the logs come from (default auto: the files "
                              "when this is dom0, demo logs otherwise)")
